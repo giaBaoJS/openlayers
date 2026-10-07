@@ -358,6 +358,12 @@ describe('ol/format/Polyline.js', function () {
       assert.strictEqual(format.writeFeature(feature), encodedFlatPoints);
     });
 
+    it('does not modify the feature geometry', function () {
+      const feature = new Feature(new LineString(points));
+      format.writeFeature(feature);
+      assert.deepEqual(feature.getGeometry().getFlatCoordinates(), flatPoints);
+    });
+
     it('transforms and returns the expected text', function () {
       const feature = new Feature(new LineString(points3857));
       assert.strictEqual(
@@ -389,6 +395,13 @@ describe('ol/format/Polyline.js', function () {
   describe('#writeGeometry', function () {
     it('returns the expected text', function () {
       const geometry = new LineString(points);
+      assert.strictEqual(format.writeGeometry(geometry), encodedFlatPoints);
+    });
+
+    it('does not modify the geometry', function () {
+      const geometry = new LineString(points);
+      format.writeGeometry(geometry, {featureProjection: 'EPSG:4326'});
+      assert.deepEqual(geometry.getFlatCoordinates(), flatPoints);
       assert.strictEqual(format.writeGeometry(geometry), encodedFlatPoints);
     });
 
